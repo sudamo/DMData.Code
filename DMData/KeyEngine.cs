@@ -4,82 +4,84 @@ namespace DMData.Code
 {
     public class KeyEngine
     {
-        private const string C_Str1 = "101501";
-        private const string C_Str2 = "101502";
-        private const string C_Str3 = "101503";
-        private const int C_Int1 = 0;
-        private const int C_Int2 = 1;
-        private const int C_Int3 = 2;
-        private static KeyEngine ke = null;
-        private int i_1 = 1;
-        private int i_2;
-        private string s_1;
-        private bool b_1 = false;
+        private const string _sc1 = "101501";
+        private const string _cs2 = "101502";
+        private const string _cs3 = "101503";
+        private const int _ci1 = 0;
+        private const int _ci2 = 1;
+        private const int _ci3 = 2;
+        private int _i1 = 1;
+        private int _i2;
+        private string _s1;
+        private bool _b1 = false;
+
+        private static KeyEngine _Instance = null;
         public static KeyEngine Instance
         {
             get
             {
-                if (ke == null)
+                if (_Instance == null)
                 {
-                    ke = Func_1();
+                    _Instance = Func_1();
                 }
-                return ke;
+                return _Instance;
             }
         }
+
         public int DaysCounter
         {
             get
             {
-                return i_1;
+                return _i1;
             }
             set
             {
-                i_1 = value;
+                _i1 = value;
             }
         }
         public string LicenseKey
         {
             get
             {
-                return s_1;
+                return _s1;
             }
         }
         public int Version
         {
             get
             {
-                return i_2;
+                return _i2;
             }
             set
             {
-                i_2 = value;
+                _i2 = value;
             }
         }
         public bool IsRegular
         {
             get
             {
-                return b_1;
+                return _b1;
             }
             set
             {
-                b_1 = value;
+                _b1 = value;
             }
         }
 
         public static KeyEngine GetInstance()
         {
-            if (ke == null)
+            if (_Instance == null)
             {
-                ke = Func_1();
+                _Instance = Func_1();
             }
-            return ke;
+            return _Instance;
         }
         private static KeyEngine Func_1()
         {
-            if (ke != null)
+            if (_Instance != null)
             {
-                return ke;
+                return _Instance;
             }
             return new KeyEngine();
         }
@@ -88,7 +90,7 @@ namespace DMData.Code
             RegistryKey rk = null;
             try
             {
-                rk = Registry.LocalMachine.OpenSubKey(pStr, !b_1);
+                rk = Registry.LocalMachine.OpenSubKey(pStr, !_b1);
             }
             catch
             {
@@ -102,19 +104,19 @@ namespace DMData.Code
             try
             {
                 string text = rk.GetValue("101503").ToString();
-                i_2 = int.Parse(text);
+                _i2 = int.Parse(text);
             }
             catch
             {
-                i_2 = 1010;
+                _i2 = 1010;
             }
             try
             {
-                s_1 = rk.GetValue("101501").ToString();
-                i_1 = int.Parse(rk.GetValue("101502").ToString());
-                if (!b_1)
+                _s1 = rk.GetValue("101501").ToString();
+                _i1 = int.Parse(rk.GetValue("101502").ToString());
+                if (!_b1)
                 {
-                    rk.SetValue("101502", i_1 + 1);
+                    rk.SetValue("101502", _i1 + 1);
                 }
                 rk.Close();
             }

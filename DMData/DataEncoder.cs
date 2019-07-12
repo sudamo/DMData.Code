@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Text;
-using System.Security.Cryptography;
 using System.IO;
+using System.Text;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace DMData.Code
 {
     public class DataEncoder
     {
-        private static char[] c_array = new char[]
+        private static char[] _arr = new char[]
         {
             'C','p','2','u','V','S','Z','8','k','B'
             ,'h','E','X','t','W','F','x','i','\\','y'
@@ -23,13 +23,13 @@ namespace DMData.Code
         };
 
         //DES默认密钥向量
-        private static byte[] DES_IV = new byte[] { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
+        private static byte[] _DES_IV = new byte[] { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
         //AES默认密钥向量
-        private static readonly byte[] AES_IV = new byte[] { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
+        private static readonly byte[] _AES_IV = new byte[] { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
 
-        private static int i_1 = c_array.Length;
-        private static int i_2 = 6;
-        private static int i_3 = 36;
+        private static int _i1 = _arr.Length;
+        private static int _i2 = 6;
+        private static int _i3 = 36;
 
         public static string EncryptData(string pStr)
         {
@@ -46,7 +46,7 @@ namespace DMData.Code
                 if (num < 32 || num > 126)
                 {
                     string text3 = Func_5(num);
-                    text += c_array[i];
+                    text += _arr[i];
                     text += text3.Length.ToString();
                     text2 += text3;
                 }
@@ -78,9 +78,9 @@ namespace DMData.Code
             }
             if (num2 < 0)
             {
-                num2 += i_1;
+                num2 += _i1;
             }
-            if (num != num2 % i_1)
+            if (num != num2 % _i1)
             {
                 return "";
             }
@@ -89,14 +89,14 @@ namespace DMData.Code
             int num5 = Func_3(array[2]);
             int num6 = Func_3(array[3]);
             int num7 = Func_3(array[4]);
-            if (i_2 + num4 + num5 + num6 + num7 != length)
+            if (_i2 + num4 + num5 + num6 + num7 != length)
             {
                 return "";
             }
             char[] array2 = new char[num5 + num6];
             for (int i = 0; i < num5 + num6; i++)
             {
-                array2[i] = Func_2(Func_3(array[i + i_2 + num4]) - num3);
+                array2[i] = Func_2(Func_3(array[i + _i2 + num4]) - num3);
             }
             if (num6 == 0)
             {
@@ -163,7 +163,7 @@ namespace DMData.Code
         {
             byte[] inputBytes = Encoding.UTF8.GetBytes(input);
             byte[] keyBytes = Encoding.UTF8.GetBytes(key);
-            byte[] encryptBytes = EncryptDES(inputBytes, keyBytes, DES_IV);
+            byte[] encryptBytes = EncryptDES(inputBytes, keyBytes, _DES_IV);
             //string result = Encoding.UTF8.GetString(encryptBytes); //无法解码,其加密结果中文出现乱码：d\"�e����(��uπ�W��-��,_�\nJn7 
             //原因：如果明文为中文，UTF8编码两个字节标识一个中文字符，但是加密后，两个字节密文，不一定还是中文字符。
             using (DES des = new DESCryptoServiceProvider())
@@ -223,7 +223,7 @@ namespace DMData.Code
             byte[] inputBytes = Convert.FromBase64String(input);
 
             byte[] keyBytes = Encoding.UTF8.GetBytes(key);
-            byte[] resultBytes = DecryptDES(inputBytes, keyBytes, DES_IV);
+            byte[] resultBytes = DecryptDES(inputBytes, keyBytes, _DES_IV);
 
             string result = Encoding.UTF8.GetString(resultBytes);
 
@@ -315,7 +315,7 @@ namespace DMData.Code
             using (AesCryptoServiceProvider aesAlg = new AesCryptoServiceProvider())
             {
                 aesAlg.Key = keyBytes;
-                aesAlg.IV = AES_IV;
+                aesAlg.IV = _AES_IV;
 
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
                 using (MemoryStream msEncrypt = new MemoryStream())
@@ -352,7 +352,7 @@ namespace DMData.Code
             using (AesCryptoServiceProvider aesAlg = new AesCryptoServiceProvider())
             {
                 aesAlg.Key = keyBytes;
-                aesAlg.IV = AES_IV;
+                aesAlg.IV = _AES_IV;
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
                 using (MemoryStream msEncrypt = new MemoryStream(inputBytes))
@@ -644,10 +644,10 @@ namespace DMData.Code
             Random random = new Random();
             int length = pStr1.Length;
             int length2 = pStr2.Length;
-            int num = Math.Abs(random.Next()) % i_1;
+            int num = Math.Abs(random.Next()) % _i1;
             int num2 = Math.Abs(random.Next()) % 5;
             int num3 = Math.Abs(random.Next()) % 5;
-            int num4 = i_2 + num2 + length + length2 + num3;
+            int num4 = _i2 + num2 + length + length2 + num3;
             char[] array = new char[num4];
             if (num2 >= num3)
             {
@@ -665,18 +665,18 @@ namespace DMData.Code
             array[5] = Func_2(0);
             for (int i = 0; i < num2; i++)
             {
-                array[i_2 + i] = Func_2(Math.Abs(random.Next()) % i_1);
+                array[_i2 + i] = Func_2(Math.Abs(random.Next()) % _i1);
             }
             char[] array2 = pStr1.ToCharArray();
             for (int i = 0; i < length + length2; i++)
             {
                 int num5 = Func_3(array2[i]);
                 char c = Func_2(num5 + num);
-                array[i_2 + num2 + i] = c;
+                array[_i2 + num2 + i] = c;
             }
             for (int i = 0; i < num3; i++)
             {
-                array[i_2 + num2 + length + length2 + i] = Func_2(Math.Abs(random.Next()) % i_1);
+                array[_i2 + num2 + length + length2 + i] = Func_2(Math.Abs(random.Next()) % _i1);
             }
             int num6 = 0;
             for (int i = 0; i < num4; i++)
@@ -690,19 +690,19 @@ namespace DMData.Code
         {
             while (pInt < 0)
             {
-                pInt += i_1;
+                pInt += _i1;
             }
-            while (pInt >= i_1)
+            while (pInt >= _i1)
             {
-                pInt -= i_1;
+                pInt -= _i1;
             }
-            return c_array[pInt];
+            return _arr[pInt];
         }
         private static int Func_3(char pChr)
         {
-            for (int i = 0; i < i_1; i++)
+            for (int i = 0; i < _i1; i++)
             {
-                if (c_array[i] == pChr)
+                if (_arr[i] == pChr)
                 {
                     return i;
                 }
@@ -715,7 +715,7 @@ namespace DMData.Code
             char[] array = pStr.ToCharArray();
             for (int i = 0; i < array.Length; i++)
             {
-                num += Func_6(array[i]) * (int)Math.Pow(i_3, (array.Length - 1 - i));
+                num += Func_6(array[i]) * (int)Math.Pow(_i3, (array.Length - 1 - i));
             }
             return num;
         }
@@ -723,10 +723,10 @@ namespace DMData.Code
         {
             string text = "";
             int i = pInt;
-            while (i >= i_3)
+            while (i >= _i3)
             {
-                int num = i % i_3;
-                i /= i_3;
+                int num = i % _i3;
+                i /= _i3;
                 if (num >= 0)
                 {
                     text = Func_7(num) + text;
